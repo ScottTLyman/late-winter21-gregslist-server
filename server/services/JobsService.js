@@ -2,16 +2,16 @@ import { dbContext } from "../db/DbContext"
 import { BadRequest, Forbidden } from "../utils/Errors"
 
 class JobsService {
-  async edit(update) {
-    const original = await this.getById(update.id)
-    if (original.creatorId.toString() !== update.creatorId) {
+  async edit(body) {
+    const original = await this.getById(body.id)
+    if (original.creatorId.toString() !== body.creatorId) {
       throw new Forbidden(`You can't change that!`)
     }
-    original.company = update.company ? update.company : original.company
-    original.jobTitle = update.jobTitle ? update.jobTitle : original.jobTitle
-    original.hours = update.hours ? update.hours : original.hours
-    original.rate = update.rate ? update.rate : original.rate
-    original.description = update.description ? update.description : original.description
+    original.company = body.company == null ? original.company : body.company
+    original.jobTitle = body.jobTitle == null ? original.jobTitle : body.jobTitle
+    original.hours = body.hours == null ? original.hours : body.hours
+    original.rate = body.rate == null ? original.rate : body.rate
+    original.description = body.description == null ? original.description : body.description
     await original.save({ runValidators: true })
     return original
   }

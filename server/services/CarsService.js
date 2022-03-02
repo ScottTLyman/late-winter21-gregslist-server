@@ -20,17 +20,17 @@ class CarsService {
     return car
   }
 
-  async edit(update) {
-    const original = await this.getById(update.id)
-    if (original.creatorId.toString() !== update.creatorId) {
+  async edit(body) {
+    const original = await this.getById(body.id)
+    if (original.creatorId.toString() !== body.creatorId) {
       throw new Forbidden('You do not own this car... yet')
     }
     // we use a turnary to validate if data was passed, otherwise keep as is
-    original.make = update.make ? update.make : original.make
-    original.model = update.model ? update.model : original.model
-    original.year = update.year ? update.year : original.year
-    original.price = update.price ? update.price : original.price
-    original.imgUrl = update.imgUrl ? update.imgUrl : original.imgUrl
+    original.make = body.make == null ? original.make : body.make
+    original.model = body.model == null ? original.model : body.model
+    original.year = body.year == null ? original.year : body.year
+    original.price = body.price == null ? original.price : body.price
+    original.imgUrl = body.imgUrl == null ? original.imgUrl : body.imgUrl
 
     await original.save({ runValidators: true })
     return original
